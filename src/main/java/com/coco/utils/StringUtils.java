@@ -20,4 +20,7 @@ public class StringUtils {
         }
         return "NON";
     }
+    public static String rmFileExtension(String originalFileName ){
+        return originalFileName.substring(0,originalFileName.lastIndexOf("."));
+    }
 }

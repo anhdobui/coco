@@ -37,7 +37,7 @@ public class PaintingEntity extends BaseEntity{
     private List<CartDetailEntity> cartDetails;
 
 
-    @PrePersist
+    @PostPersist
     protected void onCreate() {
         if (this.code == null) {
             this.code = StringUtils.extractFirstLetters(getName()) + '-' + getId();
