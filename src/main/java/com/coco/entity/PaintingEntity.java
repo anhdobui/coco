@@ -1,6 +1,5 @@
 package com.coco.entity;
 
-import com.coco.utils.StringUtils;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +39,7 @@ public class PaintingEntity extends BaseEntity{
     @PostPersist
     protected void onCreate() {
         if (this.code == null) {
-            this.code = StringUtils.extractFirstLetters(getName()) + '-' + getId();
+            this.code = "PAW" + '-' + getId();
         }
     }
 

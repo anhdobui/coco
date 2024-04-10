@@ -21,6 +21,8 @@ public class StringUtils {
         return "NON";
     }
     public static String rmFileExtension(String originalFileName ){
+        int indexDot = originalFileName.lastIndexOf(".");
+        if(indexDot == -1) indexDot = originalFileName.length();
         return originalFileName.substring(0,originalFileName.lastIndexOf("."));
     }
 }

@@ -24,6 +24,15 @@ public class PaintingService implements IPaintingService {
             PaintingEntity oldArtworkEntity = paintingRepository.findById(paintingDTO.getId()).orElse(null);
             if(oldArtworkEntity != null){
                 paintingEntity = paintingMapper.toEntity(paintingDTO);
+                paintingEntity.setCode(oldArtworkEntity.getCode());
+                paintingEntity.setCartDetails(oldArtworkEntity.getCartDetails());
+                paintingEntity.setDetailReceivedLogs(oldArtworkEntity.getDetailReceivedLogs());
+                if(paintingDTO.getThumbnailUrl() == null){
+                    paintingEntity.setThumbnailUrl(oldArtworkEntity.getThumbnailUrl());
+                }
+                if(paintingDTO.getAlbumUrl() == null){
+                    paintingEntity.setAlbumUrl(oldArtworkEntity.getAlbumUrl());
+                }
             }else{
                 throw new CustomRuntimeException("Không tồn tại tranh");
             }
