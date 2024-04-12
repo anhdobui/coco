@@ -5,7 +5,9 @@ import com.coco.entity.PaintingEntity;
 import com.coco.exception.CustomRuntimeException;
 import com.coco.mapper.PaintingMapper;
 import com.coco.repository.PaintingRepository;
+import com.coco.repository.TopicRepository;
 import com.coco.service.IPaintingService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +19,16 @@ public class PaintingService implements IPaintingService {
     @Autowired
     private PaintingRepository paintingRepository;
 
+    @Autowired
+    private TopicRepository topicRepository;
+
+    @Transactional
     @Override
     public PaintingDTO save(PaintingDTO paintingDTO) {
-        PaintingEntity paintingEntity =  new PaintingEntity();
+        PaintingEntity paintingEntity = paintingMapper.toEntity(paintingDTO);
         if(paintingDTO.getId() != null ){
             PaintingEntity oldArtworkEntity = paintingRepository.findById(paintingDTO.getId()).orElse(null);
             if(oldArtworkEntity != null){
-                paintingEntity = paintingMapper.toEntity(paintingDTO);
                 paintingEntity.setCode(oldArtworkEntity.getCode());
                 paintingEntity.setCartDetails(oldArtworkEntity.getCartDetails());
                 paintingEntity.setDetailReceivedLogs(oldArtworkEntity.getDetailReceivedLogs());
@@ -36,10 +41,9 @@ public class PaintingService implements IPaintingService {
             }else{
                 throw new CustomRuntimeException("Không tồn tại tranh");
             }
-        }else{
-            paintingEntity = paintingMapper.toEntity(paintingDTO);
         }
         paintingEntity = paintingRepository.save(paintingEntity);
         return paintingMapper.toDTO(paintingEntity);
     }
+
 }

@@ -1,16 +1,20 @@
 package com.coco.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "painting")
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaintingEntity extends BaseEntity{
 
     private String code;
@@ -26,8 +30,7 @@ public class PaintingEntity extends BaseEntity{
     @Column(name = "url")
     private List<String> albumUrl;
 
-    @ManyToMany(mappedBy = "paintings")
-    private List<TopicEntity> topics = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "painting",cascade = {CascadeType.PERSIST, CascadeType.MERGE},orphanRemoval = true)
     private List<DetailReceivedLogEntity> detailReceivedLogs;
@@ -35,6 +38,18 @@ public class PaintingEntity extends BaseEntity{
     @OneToMany(mappedBy = "painting",cascade = {CascadeType.PERSIST, CascadeType.MERGE},orphanRemoval = true)
     private List<CartDetailEntity> cartDetails;
 
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "painting_topic",
+            joinColumns = {
+                    @JoinColumn(name = "painting_id",referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "topic_id",referencedColumnName = "id")
+            }
+    )
+    Set<TopicEntity> topics;
 
     @PostPersist
     protected void onCreate() {

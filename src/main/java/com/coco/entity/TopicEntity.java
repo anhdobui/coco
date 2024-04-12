@@ -1,15 +1,21 @@
 package com.coco.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "topic")
 public class TopicEntity extends BaseEntity{
 
@@ -17,9 +23,6 @@ public class TopicEntity extends BaseEntity{
 
     private String description;
 
-    @ManyToMany
-    @JoinTable(name = "topic_painting",
-            joinColumns = @JoinColumn(name = "topic_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "painting_id", nullable = false))
-    private List<PaintingEntity> paintings = new ArrayList<>();
+    @ManyToMany(mappedBy = "topics",fetch = FetchType.LAZY)
+    Set<PaintingEntity> paintings;
 }

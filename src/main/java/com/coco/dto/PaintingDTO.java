@@ -22,7 +22,6 @@ public class PaintingDTO {
     private Double price;
     private String thumbnailUrl;
     private List<String> albumUrl;
-
-
+    private List<Long> topicIds;
 
 }

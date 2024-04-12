@@ -2,7 +2,9 @@ package com.coco.controller;
 
 import com.coco.cloudinary.CloudinaryService;
 import com.coco.dto.PaintingDTO;
+import com.coco.entity.PaintingEntity;
 import com.coco.exception.CustomRuntimeException;
+import com.coco.repository.PaintingRepository;
 import com.coco.service.IPaintingService;
 import com.coco.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +23,20 @@ public class PaintingController {
     private IPaintingService paintingService;
     @Autowired
     private CloudinaryService cloudinaryService;
+    @Autowired
+    private PaintingRepository paintingRepository;
     @PostMapping
-    public PaintingDTO addPainting(@ModelAttribute PaintingDTO model, @RequestParam("thumbnail") MultipartFile thumbnail, @RequestParam("album") MultipartFile[] album) throws IOException {
-        model.setAlbumUrl(Arrays.stream(album).map(image -> {
-            try {
-                return cloudinaryService.uploadFile(image, StringUtils.rmFileExtension(image.getOriginalFilename()));
-            } catch (IOException e) {
-                throw new CustomRuntimeException(e.getMessage());
-            }
-        }).collect(Collectors.toList()));
+    public PaintingDTO addPainting(@ModelAttribute PaintingDTO model, @RequestParam(name = "thumbnail" ,required = false) MultipartFile thumbnail, @RequestParam(name = "album",required = false) MultipartFile[] album) throws IOException {
+        if(album != null){
+            model.setAlbumUrl(Arrays.stream(album).map(image -> {
+                try {
+                    return cloudinaryService.uploadFile(image, StringUtils.rmFileExtension(image.getOriginalFilename()));
+                } catch (IOException e) {
+                    throw new CustomRuntimeException(e.getMessage());
+                }
+            }).collect(Collectors.toList()));
+        }
+        if(thumbnail != null)
         model.setThumbnailUrl(cloudinaryService.uploadFile(thumbnail,StringUtils.rmFileExtension(thumbnail.getOriginalFilename())));
         model.setId(null);
         return paintingService.save(model);
@@ -53,8 +60,13 @@ public class PaintingController {
                 }).collect(Collectors.toList()));
             }
         } catch (Exception e) {
-            throw new CustomRuntimeException("Không tồn tại tranh");
+            throw new CustomRuntimeException(e.getMessage());
         }
         return paintingService.save(model);
+    }
+
+    @PostMapping("/tt")
+    public PaintingEntity posP(@RequestBody PaintingEntity paintingEntity){
+        return paintingRepository.save(paintingEntity);
     }
 }
