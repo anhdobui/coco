@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -65,8 +66,13 @@ public class PaintingController {
         return paintingService.save(model);
     }
 
-    @PostMapping("/tt")
+    @PostMapping("/json")
     public PaintingEntity posP(@RequestBody PaintingEntity paintingEntity){
         return paintingRepository.save(paintingEntity);
+    }
+
+    @DeleteMapping
+    public Integer deletePainting(@RequestBody List<Long> ids){
+       return paintingService.delete(ids);
     }
 }

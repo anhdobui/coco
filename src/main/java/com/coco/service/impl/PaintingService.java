@@ -11,8 +11,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaintingService implements IPaintingService {
+
 
     @Autowired
     private PaintingMapper paintingMapper;
@@ -44,6 +47,17 @@ public class PaintingService implements IPaintingService {
         }
         paintingEntity = paintingRepository.save(paintingEntity);
         return paintingMapper.toDTO(paintingEntity);
+    }
+    @Override
+    @Transactional
+    public Integer delete(List<Long> ids) {
+        if(ids.size() > 0){
+            Integer count = paintingRepository.countByIdIn(ids);
+            if(count != ids.size()){
+                throw new CustomRuntimeException("Sản phẩm không tồn tại");
+            }
+        }
+        return paintingRepository.deleteByIdIn(ids);
     }
 
 }
