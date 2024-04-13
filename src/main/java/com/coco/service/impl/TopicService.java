@@ -71,9 +71,16 @@ public class TopicService implements ITopicService {
     @Transactional
     public Integer deleteByIdIn(List<Long> ids) {
         if(ids.size() > 0){
-            Integer count = topicRepository.countByIdIn(ids);
-            if(count != ids.size()){
-                throw new CustomRuntimeException("Topic không tồn tại");
+            Set<TopicEntity> topicEntities = new HashSet<>(topicRepository.findAllById(ids));
+            if(topicEntities.size() != ids.size()){
+                throw new CustomRuntimeException("Có Topic không tồn tại");
+            }else{
+                Set<PaintingEntity> paintingEntities = paintingRepository.findByTopicsIn(topicEntities);
+                paintingEntities.stream().forEach(painting ->{
+                    Set<TopicEntity> topicUpdate =  painting.getTopics();
+                    topicUpdate.removeAll(topicEntities);
+                    paintingService.attachTopic(painting,topicUpdate);
+                });
             }
         }
         return topicRepository.deleteByIdIn(ids);
