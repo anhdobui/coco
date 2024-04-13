@@ -1,9 +1,6 @@
 package com.coco.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +20,6 @@ public class TopicEntity extends BaseEntity{
 
     private String description;
 
-    @ManyToMany(mappedBy = "topics",fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = PaintingEntity.class,mappedBy = "topics",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     Set<PaintingEntity> paintings;
 }

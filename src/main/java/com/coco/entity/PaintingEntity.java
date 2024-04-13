@@ -39,7 +39,7 @@ public class PaintingEntity extends BaseEntity{
     private List<CartDetailEntity> cartDetails;
 
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(targetEntity = TopicEntity.class,fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "painting_topic",
             joinColumns = {

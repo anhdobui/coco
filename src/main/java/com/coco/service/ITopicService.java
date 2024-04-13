@@ -8,4 +8,6 @@ public interface ITopicService {
     TopicDTO save(TopicDTO topicDTO);
 
     List<TopicDTO> getAll();
+
+    Integer deleteByIdIn(List<Long> ids);
 }

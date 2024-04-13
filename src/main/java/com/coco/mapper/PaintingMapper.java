@@ -8,8 +8,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,10 +20,6 @@ public class PaintingMapper {
 
     public PaintingEntity toEntity(PaintingDTO dto){
         PaintingEntity result = modelMapper.map(dto,PaintingEntity.class);
-        if (dto.getTopicIds() != null){
-            Set<TopicEntity> topicEntities = new HashSet<>(topicRepository.findAllById(dto.getTopicIds()));
-            result.setTopics(topicEntities);
-        }
         return result;
     }
 

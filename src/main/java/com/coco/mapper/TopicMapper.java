@@ -20,12 +20,12 @@ public class TopicMapper {
 
     public TopicEntity toEntity(TopicDTO topicDTO){
         TopicEntity result = modelMapper.map(topicDTO,TopicEntity.class);
-
         return result;
     }
 
     public TopicDTO toDto(TopicEntity topicEntity){
         TopicDTO result = modelMapper.map(topicEntity,TopicDTO.class);
+        if(topicEntity.getPaintings() != null)
         result.setPaintingIds(topicEntity.getPaintings().stream().map(PaintingEntity::getId).collect(Collectors.toList()));
         return result;
     }
