@@ -1,6 +1,7 @@
 package com.coco.mapper;
 
 import com.coco.dto.TopicDTO;
+import com.coco.dto.TopicResDTO;
 import com.coco.entity.PaintingEntity;
 import com.coco.entity.TopicEntity;
 import com.coco.repository.PaintingRepository;
@@ -27,6 +28,11 @@ public class TopicMapper {
         TopicDTO result = modelMapper.map(topicEntity,TopicDTO.class);
         if(topicEntity.getPaintings() != null)
         result.setPaintingIds(topicEntity.getPaintings().stream().map(PaintingEntity::getId).collect(Collectors.toList()));
+        return result;
+    }
+
+    public TopicResDTO toResDto(TopicEntity topicEntity) {
+        TopicResDTO result = modelMapper.map(topicEntity,TopicResDTO.class);
         return result;
     }
 }

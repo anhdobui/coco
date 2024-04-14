@@ -1,6 +1,8 @@
 package com.coco.service.impl;
 
 import com.coco.dto.PaintingDTO;
+import com.coco.dto.PaintingResDTO;
+import com.coco.dto.PaintingSearchDTO;
 import com.coco.entity.PaintingEntity;
 import com.coco.entity.TopicEntity;
 import com.coco.exception.CustomRuntimeException;
@@ -8,13 +10,16 @@ import com.coco.mapper.PaintingMapper;
 import com.coco.repository.PaintingRepository;
 import com.coco.repository.TopicRepository;
 import com.coco.service.IPaintingService;
+import com.coco.utils.PaintingUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PaintingService implements IPaintingService {
@@ -72,6 +77,23 @@ public class PaintingService implements IPaintingService {
     public PaintingEntity attachTopic(PaintingEntity paintingEntity, Set<TopicEntity> topicEntities){
         paintingEntity.setTopics(topicEntities);
         return paintingRepository.save(paintingEntity);
+    }
+
+    @Override
+    public PaintingResDTO findById(Long id) {
+        PaintingEntity paintingEntity = paintingRepository.findById(id).orElse(null);
+        if(paintingEntity != null){
+            return paintingMapper.toResDTO(paintingEntity);
+        }
+        throw new CustomRuntimeException("Không tồn tại tranh");
+    }
+
+    @Override
+    public List<PaintingResDTO> findByCondition(PaintingSearchDTO paintingSearch) {
+        Example<PaintingEntity> example = PaintingUtils.createExample(paintingSearch);
+        List<PaintingEntity> paintingEntities = paintingRepository.findAll(example);
+        List<PaintingResDTO> result = paintingEntities.stream().map(paintingMapper::toResDTO).collect(Collectors.toList());
+        return result;
     }
 
 }

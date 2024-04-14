@@ -1,6 +1,8 @@
 package com.coco.service;
 
 import com.coco.dto.PaintingDTO;
+import com.coco.dto.PaintingResDTO;
+import com.coco.dto.PaintingSearchDTO;
 import com.coco.entity.PaintingEntity;
 import com.coco.entity.TopicEntity;
 
@@ -13,4 +15,8 @@ public interface IPaintingService {
     Integer delete(List<Long> ids);
 
     PaintingEntity attachTopic(PaintingEntity paintingEntity, Set<TopicEntity> topics);
+
+    PaintingResDTO findById(Long id);
+
+    List<PaintingResDTO> findByCondition(PaintingSearchDTO paintingSearch);
 }

@@ -2,6 +2,8 @@ package com.coco.controller;
 
 import com.coco.cloudinary.CloudinaryService;
 import com.coco.dto.PaintingDTO;
+import com.coco.dto.PaintingResDTO;
+import com.coco.dto.PaintingSearchDTO;
 import com.coco.entity.PaintingEntity;
 import com.coco.exception.CustomRuntimeException;
 import com.coco.repository.PaintingRepository;
@@ -66,7 +68,7 @@ public class PaintingController {
         return paintingService.save(model);
     }
 
-    @PostMapping("/json")
+    @PostMapping("/test")
     public PaintingEntity posP(@RequestBody PaintingEntity paintingEntity){
         return paintingRepository.save(paintingEntity);
     }
@@ -75,4 +77,16 @@ public class PaintingController {
     public Integer deletePainting(@RequestBody List<Long> ids){
        return paintingService.delete(ids);
     }
+
+
+    @GetMapping
+    public List<PaintingResDTO> getByCondition(@ModelAttribute PaintingSearchDTO paintingSearch){
+        return paintingService.findByCondition(paintingSearch);
+    }
+
+    @GetMapping(value = "{id}")
+    public PaintingResDTO getDetail(@PathVariable("id") Long id ){
+        return paintingService.findById(id);
+    }
+
 }

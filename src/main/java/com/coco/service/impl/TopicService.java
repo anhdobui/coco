@@ -1,6 +1,7 @@
 package com.coco.service.impl;
 
 import com.coco.dto.TopicDTO;
+import com.coco.dto.TopicResDTO;
 import com.coco.entity.PaintingEntity;
 import com.coco.entity.TopicEntity;
 import com.coco.exception.CustomRuntimeException;
@@ -84,6 +85,15 @@ public class TopicService implements ITopicService {
             }
         }
         return topicRepository.deleteByIdIn(ids);
+    }
+
+    @Override
+    public TopicResDTO getById(Long id) {
+        TopicEntity topicEntity = topicRepository.findById(id).orElse(null);
+        if(topicEntity != null){
+            return topicMapper.toResDto(topicEntity);
+        }
+        throw new CustomRuntimeException("Topic không tồn tại");
     }
 
 }

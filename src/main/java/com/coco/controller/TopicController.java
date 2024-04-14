@@ -1,6 +1,7 @@
 package com.coco.controller;
 
 import com.coco.dto.TopicDTO;
+import com.coco.dto.TopicResDTO;
 import com.coco.exception.CustomRuntimeException;
 import com.coco.service.ITopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,10 @@ public class TopicController {
     @GetMapping
     private List<TopicDTO> getAll(){
         return topicService.getAll();
+    }
+
+    @GetMapping(value = "{id}")
+    public TopicResDTO getDetail(@PathVariable("id") Long id){
+        return topicService.getById(id);
     }
 }
