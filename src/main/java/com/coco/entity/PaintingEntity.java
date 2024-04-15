@@ -22,7 +22,7 @@ public class PaintingEntity extends BaseEntity{
     private Double length;
     private Double width;
     private Double thickness;
-    private Integer inventory;
+    private Integer inventory ;
     private Double price;
     private String thumbnailUrl;
     @ElementCollection
@@ -55,6 +55,13 @@ public class PaintingEntity extends BaseEntity{
     protected void onCreate() {
         if (this.code == null) {
             this.code = "PAW" + '-' + getId();
+        }
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.inventory == null) {
+            this.inventory = 0;
         }
     }
 

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -14,16 +13,18 @@ import java.util.List;
 @Table(name = "received_log")
 public class ReceivedLogEntity extends BaseEntity{
     private String code;
-    private Date dateAdded;
+//    private Date dateAdded;
+    private String note;
 
     @OneToMany(mappedBy = "receivedLog",cascade = {CascadeType.PERSIST, CascadeType.MERGE},orphanRemoval = true)
     private List<DetailReceivedLogEntity> detailReceivedLogs;
-    @PrePersist
+    @PostPersist
     protected void onCreate() {
         if (this.code == null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            String formattedDate = sdf.format(getDateAdded());
+            String formattedDate = sdf.format(getCreatedDate());
             this.code = "PN_"+ formattedDate + '-'+ getId();
         }
     }
+
 }
