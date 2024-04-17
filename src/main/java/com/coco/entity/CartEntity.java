@@ -22,4 +22,11 @@ public class CartEntity  extends BaseEntity{
 
     @OneToOne(mappedBy = "cart")
     private OrdersEntity orders;
+
+    @PostPersist
+    protected void onCreate() {
+        if (this.status == null) {
+            this.status = 1;
+        }
+    }
 }

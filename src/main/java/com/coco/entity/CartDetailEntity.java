@@ -1,9 +1,6 @@
 package com.coco.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,4 +19,11 @@ public class CartDetailEntity extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private CartEntity cart;
+
+    @PostPersist
+    protected void onCreate() {
+        if (this.qty == null) {
+            this.qty = 1;
+        }
+    }
 }

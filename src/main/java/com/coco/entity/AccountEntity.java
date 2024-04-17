@@ -32,4 +32,5 @@ public class AccountEntity extends BaseEntity{
             this.grade = 0d;
         }
     }
+
 }
