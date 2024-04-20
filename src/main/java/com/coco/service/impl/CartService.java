@@ -51,7 +51,9 @@ public class CartService implements ICartService {
         throw new CustomRuntimeException("Tài khoản không tồn tại");
     }
 
-    private CartEntity getCartEntityByAccId(Long acc_id) {
+    @Override
+    @Transactional
+    public CartEntity getCartEntityByAccId(Long acc_id) {
         AccountEntity acc = accountRepository.findById(acc_id).orElse(null);
         if(acc != null ){
             CartEntity cart = cartRepository.findFirstByStatusAndAccIdOrderByCreatedDateDesc(1,acc_id).orElse(null);

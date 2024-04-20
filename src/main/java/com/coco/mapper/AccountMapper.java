@@ -2,6 +2,7 @@ package com.coco.mapper;
 
 import com.coco.dto.AccountDTO;
 import com.coco.dto.AccountResDTO;
+import com.coco.dto.CustomerDTO;
 import com.coco.entity.AccountEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class AccountMapper {
     }
     public AccountResDTO toDTO(AccountEntity entity){
         AccountResDTO result = modelMapper.map(entity,AccountResDTO.class);
+        return result;
+    }
+
+    public CustomerDTO toCustDTO(AccountEntity entity){
+        CustomerDTO result = modelMapper.map(entity,CustomerDTO.class);
         return result;
     }
 }

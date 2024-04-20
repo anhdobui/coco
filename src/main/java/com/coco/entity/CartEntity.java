@@ -20,7 +20,7 @@ public class CartEntity  extends BaseEntity{
     @OneToMany(mappedBy = "cart",cascade = {CascadeType.PERSIST, CascadeType.MERGE},orphanRemoval = true)
     private List<CartDetailEntity> cartDetails;
 
-    @OneToOne(mappedBy = "cart")
+    @OneToOne(mappedBy = "cart",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private OrdersEntity orders;
 
     @PostPersist
