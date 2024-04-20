@@ -9,6 +9,7 @@ import com.coco.entity.PaintingEntity;
 import com.coco.exception.CustomRuntimeException;
 import com.coco.mapper.CartMapper;
 import com.coco.repository.AccountRepository;
+import com.coco.repository.CartDetailRepository;
 import com.coco.repository.CartRepository;
 import com.coco.repository.PaintingRepository;
 import com.coco.service.ICartService;
@@ -33,6 +34,9 @@ public class CartService implements ICartService {
 
     @Autowired
     private PaintingRepository paintingRepository;
+
+    @Autowired
+    private CartDetailRepository cartDetailRepository;
 
 
 
@@ -61,16 +65,17 @@ public class CartService implements ICartService {
 
     @Override
     @Transactional
-    public Integer addPaintingToCart(CartPaintingDTO cartPaintingDTO) {
+    public Long addPaintingToCart(CartPaintingDTO cartPaintingDTO) {
         CartEntity cart = getCartEntityByAccId(cartPaintingDTO.getAccountId());
         boolean flagIsExistPainting = false;
         List<CartDetailEntity> cartDetailEntities = new ArrayList<>();
         if(cart.getCartDetails() != null){
             cartDetailEntities = cart.getCartDetails();
             for(CartDetailEntity cartDetail : cartDetailEntities){
-                if(cartDetail.getPainting().getId() == cartPaintingDTO.getPaintingId())
+                if(cartDetail.getPainting().getId() == cartPaintingDTO.getPaintingId()){
                     flagIsExistPainting = true;
-                break;
+                    break;
+                }
             }
         }
        if(!flagIsExistPainting){
@@ -82,7 +87,8 @@ public class CartService implements ICartService {
            cart.setCartDetails(cartDetailEntities);
            cartRepository.save(cart);
        }
-        return cartRepository.countCartDetailsByAccId(cartPaintingDTO.getAccountId());
+        Long result = cartDetailRepository.countByCartAccIdAndCartStatus(cartPaintingDTO.getAccountId(),1);
+        return result;
     }
 
     @Override

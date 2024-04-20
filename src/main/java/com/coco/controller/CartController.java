@@ -14,7 +14,7 @@ public class CartController {
     private ICartService cartService;
 
     @PostMapping("/painting")
-    public Integer addPaintingToCart (@RequestBody CartPaintingDTO cartPaintingDTO) {
+    public Long addPaintingToCart (@RequestBody CartPaintingDTO cartPaintingDTO) {
         return cartService.addPaintingToCart(cartPaintingDTO);
     }
 

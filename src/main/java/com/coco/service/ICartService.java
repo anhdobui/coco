@@ -4,7 +4,7 @@ import com.coco.dto.CartPaintingDTO;
 import com.coco.dto.CartResDTO;
 
 public interface ICartService {
-    Integer addPaintingToCart(CartPaintingDTO cartPaintingDTO);
+    Long addPaintingToCart(CartPaintingDTO cartPaintingDTO);
 
     CartResDTO getCartByAccount(Long accountId);
 }
