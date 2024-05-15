@@ -5,6 +5,7 @@ import com.coco.dto.OrdersDTO;
 import com.coco.entity.CartEntity;
 import com.coco.entity.OrdersEntity;
 import com.coco.exception.CustomRuntimeException;
+import com.coco.exception.DataNotFoundException;
 import com.coco.mapper.OrdersMapper;
 import com.coco.repository.CartRepository;
 import com.coco.repository.OrdersRepository;
@@ -43,6 +44,19 @@ public class OrdersService implements IOrdersService {
             return ordersMapper.toDTO(ordersEntity);
         }
         throw new CustomRuntimeException("Lỗi giỏ hàng");
+    }
+
+    @Override
+    public OrdersEntity updateOrder(Long orderId, OrdersDTO ordersDTO) throws DataNotFoundException {
+        OrdersEntity existOrder = ordersRepository.findById(orderId).orElseThrow(() ->
+            new DataNotFoundException("Order khong ton tai"));
+        existOrder.setStatus(ordersDTO.getStatus());
+        existOrder.setCode(ordersDTO.getCode());
+        existOrder.setOrderDate(ordersDTO.getOrderDate());
+        existOrder.setDeliveryDate(ordersDTO.getDeliveryDate());
+        existOrder.setCancellationDate(ordersDTO.getCancellationDate());
+        existOrder.setFinishedDate(ordersDTO.getFinishedDate());
+        return ordersRepository.save(existOrder);
     }
 
     private boolean checkCartOfAcc(OrderReqDTO ordReq){

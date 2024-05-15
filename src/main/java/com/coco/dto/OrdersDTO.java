@@ -1,5 +1,6 @@
 package com.coco.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;

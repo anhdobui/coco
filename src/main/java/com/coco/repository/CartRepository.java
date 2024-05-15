@@ -10,4 +10,6 @@ public interface CartRepository extends JpaRepository<CartEntity,Long> {
 
     Optional<CartEntity> findByIdAndStatusEquals(Long accId ,Integer status);
 
+    Optional<CartEntity> findByAcc_Id(Long accId);
+
 }
