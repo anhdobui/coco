@@ -80,7 +80,7 @@ public class PaintingController {
 
 
     @GetMapping
-    public List<PaintingResDTO> getByCondition(@ModelAttribute PaintingSearchDTO paintingSearch){
+    public List<PaintingResDTO> getByCondition(@ModelAttribute PaintingSearchDTO paintingSearch) {
         return paintingService.findByCondition(paintingSearch);
     }
 

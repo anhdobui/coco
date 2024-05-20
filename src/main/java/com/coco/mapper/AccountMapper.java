@@ -22,8 +22,12 @@ public class AccountMapper {
         result.setPassword(passwordEncoder.encode(dto.getPassword()));
         return result;
     }
-    public AccountResDTO toDTO(AccountEntity entity){
+    public AccountResDTO toResDTO(AccountEntity entity){
         AccountResDTO result = modelMapper.map(entity,AccountResDTO.class);
+        return result;
+    }
+    public AccountDTO toDTO(AccountEntity entity){
+        AccountDTO result = modelMapper.map(entity,AccountDTO.class);
         return result;
     }
 

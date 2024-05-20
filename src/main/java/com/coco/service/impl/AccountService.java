@@ -26,9 +26,15 @@ public class AccountService implements IAccountService {
 
     @Override
     public AccountResDTO save(AccountDTO acc) {
-        AccountEntity accountEntity = accountMapper.toEntity(acc);
-        accountEntity = accountRepository.save(accountEntity);
-        return accountMapper.toDTO(accountEntity);
+        Boolean accountIsExist = accountRepository.existsByUsername(acc.getUsername());
+        if(!accountIsExist){
+            AccountEntity accountEntity = accountMapper.toEntity(acc);
+            accountEntity = accountRepository.save(accountEntity);
+            return accountMapper.toResDTO(accountEntity);
+        }else{
+            throw new CustomRuntimeException("Tài khoản đã tồn tại");
+        }
+
     }
 
     @Override
@@ -36,7 +42,7 @@ public class AccountService implements IAccountService {
         AccountEntity accountEntity = accountRepository.findByUsername(acc.getUsername()).orElse(null);
         if(accountEntity != null){
             if(passwordEncoder.matches(acc.getPassword(), accountEntity.getPassword())){
-                return accountMapper.toDTO(accountEntity);
+                return accountMapper.toResDTO(accountEntity);
             }
         }
         throw new CustomRuntimeException("Tài khoản hoặc mật khẩu không chính xác");

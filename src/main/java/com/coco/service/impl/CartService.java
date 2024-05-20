@@ -80,15 +80,15 @@ public class CartService implements ICartService {
                 }
             }
         }
-       if(!flagIsExistPainting){
-           CartDetailEntity cartDetail = new CartDetailEntity();
-           PaintingEntity painting = paintingRepository.findById(cartPaintingDTO.getPaintingId()).orElseThrow(() -> new CustomRuntimeException(""));
-           cartDetail.setPainting(painting);
-           cartDetail.setCart(cart);
-           cartDetailEntities.add(cartDetail);
-           cart.setCartDetails(cartDetailEntities);
-           cartRepository.save(cart);
-       }
+        if(!flagIsExistPainting){
+            CartDetailEntity cartDetail = new CartDetailEntity();
+            PaintingEntity painting = paintingRepository.findById(cartPaintingDTO.getPaintingId()).orElseThrow(() -> new CustomRuntimeException(""));
+            cartDetail.setPainting(painting);
+            cartDetail.setCart(cart);
+            cartDetailEntities.add(cartDetail);
+            cart.setCartDetails(cartDetailEntities);
+            cartRepository.save(cart);
+        }
         Long result = cartDetailRepository.countByCartAccIdAndCartStatus(cartPaintingDTO.getAccountId(),1);
         return result;
     }

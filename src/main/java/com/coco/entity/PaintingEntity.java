@@ -19,6 +19,7 @@ public class PaintingEntity extends BaseEntity{
 
     private String code;
     private String name;
+    private String artist;
     private Double length;
     private Double width;
     private Double thickness;

@@ -10,10 +10,12 @@ import com.coco.mapper.PaintingMapper;
 import com.coco.repository.PaintingRepository;
 import com.coco.repository.TopicRepository;
 import com.coco.service.IPaintingService;
-import com.coco.utils.PaintingUtils;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -90,10 +92,45 @@ public class PaintingService implements IPaintingService {
 
     @Override
     public List<PaintingResDTO> findByCondition(PaintingSearchDTO paintingSearch) {
-        Example<PaintingEntity> example = PaintingUtils.createExample(paintingSearch);
-        List<PaintingEntity> paintingEntities = paintingRepository.findAll(example);
-        List<PaintingResDTO> result = paintingEntities.stream().map(paintingMapper::toResDTO).collect(Collectors.toList());
+        Specification<PaintingEntity> spec = buildSpecification(paintingSearch);
+        List<PaintingEntity> paintings = paintingRepository.findAll(spec);
+        List<PaintingResDTO> result = paintings.stream().map(paintingMapper::toResDTO).collect(Collectors.toList());
         return result;
     }
+    private Specification<PaintingEntity> buildSpecification(PaintingSearchDTO paintingSearch) {
+        return (root, query, cb) -> {
+            Predicate predicate = cb.conjunction();
 
+            if (paintingSearch.getId() != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("id"), paintingSearch.getId()));
+            }
+            if (paintingSearch.getCode() != null) {
+                predicate = cb.and(predicate, cb.like(root.get("code"), "%" + paintingSearch.getCode() + "%"));
+            }
+            if (paintingSearch.getName() != null) {
+                predicate = cb.and(predicate, cb.like(root.get("name"), "%" + paintingSearch.getName() + "%"));
+            }
+            if (paintingSearch.getLength() != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("length"), paintingSearch.getLength()));
+            }
+            if (paintingSearch.getWidth() != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("width"), paintingSearch.getWidth()));
+            }
+            if (paintingSearch.getThickness() != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("thickness"), paintingSearch.getThickness()));
+            }
+            if (paintingSearch.getPriceFrom() != null) {
+                predicate = cb.and(predicate, cb.greaterThanOrEqualTo(root.get("price"), paintingSearch.getPriceFrom()));
+            }
+            if (paintingSearch.getPriceTo() != null) {
+                predicate = cb.and(predicate, cb.lessThanOrEqualTo(root.get("price"), paintingSearch.getPriceTo()));
+            }
+            if (paintingSearch.getTopicIds() != null && !paintingSearch.getTopicIds().isEmpty()) {
+                Join<Object, Object> topics = root.join("topics", JoinType.INNER);
+                predicate = cb.and(predicate, topics.get("id").in(paintingSearch.getTopicIds()));
+            }
+
+            return predicate;
+        };
+    }
 }
