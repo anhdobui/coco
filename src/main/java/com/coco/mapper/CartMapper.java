@@ -23,20 +23,28 @@ public class CartMapper {
 
     public CartResDTO toResDTO(CartEntity entity){
         CartResDTO result = modelMapper.map(entity,CartResDTO.class);
-        result.setAccountId(entity.getId());
+        result.setAccountId(entity.getAcc().getId());
+        BigDecimal total = calculationTotalCart(entity);
+        result.setTotal(total);
         if(entity.getCartDetails() != null ){
-            BigDecimal total = entity.getCartDetails().stream()
+            List<CartDetailResDTO> cartDetailResDTOs = entity.getCartDetails().stream().map(cartDetailMapper::toResDTO).collect(Collectors.toList());
+            result.setDetails(cartDetailResDTOs);
+        }
+        return result;
+    }
+
+    public BigDecimal calculationTotalCart(CartEntity cartEntity){
+        if(cartEntity.getCartDetails() != null ){
+            BigDecimal total = cartEntity.getCartDetails().stream()
                     .map(cartDetail -> {
                         BigDecimal price = BigDecimal.valueOf(cartDetail.getPainting().getPrice());
                         BigDecimal qty = BigDecimal.valueOf(cartDetail.getQty());
                         return price.multiply(qty);
                     })
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            List<CartDetailResDTO> cartDetailResDTOs = entity.getCartDetails().stream().map(cartDetailMapper::toResDTO).collect(Collectors.toList());
-            result.setDetails(cartDetailResDTOs);
             total = total.setScale(2, RoundingMode.HALF_UP);
-            result.setTotal(total);
+            return total;
         }
-        return result;
+        return new BigDecimal(0);
     }
 }

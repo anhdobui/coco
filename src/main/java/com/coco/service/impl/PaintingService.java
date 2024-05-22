@@ -129,7 +129,7 @@ public class PaintingService implements IPaintingService {
                 Join<Object, Object> topics = root.join("topics", JoinType.INNER);
                 predicate = cb.and(predicate, topics.get("id").in(paintingSearch.getTopicIds()));
             }
-
+            query.orderBy(cb.desc(root.get("modifiedDate")));
             return predicate;
         };
     }

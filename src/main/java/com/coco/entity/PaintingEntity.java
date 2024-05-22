@@ -63,7 +63,10 @@ public class PaintingEntity extends BaseEntity{
     public void prePersist() {
         if (this.inventory == null) {
             this.inventory = 0;
+        }if (this.price == null) {
+            this.price = 0d;
         }
     }
+
 
 }

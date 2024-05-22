@@ -19,9 +19,7 @@ public class CartDetailMapper {
 
     public CartDetailResDTO toResDTO(CartDetailEntity cartDetailEntity){
         CartDetailResDTO result = modelMapper.map(cartDetailEntity,CartDetailResDTO.class);
-        BigDecimal bdQty = new BigDecimal(cartDetailEntity.getQty());
-        BigDecimal bdPrice = new BigDecimal(cartDetailEntity.getPainting().getPrice());
-        BigDecimal total = bdQty.multiply(bdPrice).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal total = calculationTotalCartDetail(cartDetailEntity);
         result.setTotal(total);
         result.setPainting(paintingMapper.toResDTO(cartDetailEntity.getPainting()));
         return result;
@@ -29,10 +27,15 @@ public class CartDetailMapper {
     public CartDetailResDTO toResDTO(CartDetailEntity cartDetailEntity,CartEntity cartEntity){
         CartDetailResDTO result = modelMapper.map(cartDetailEntity,CartDetailResDTO.class);
         result.setCartId(cartEntity.getId());
+        BigDecimal total = calculationTotalCartDetail(cartDetailEntity);
+        result.setTotal(total);
+        result.setTotal(total);
+        return result;
+    }
+    public BigDecimal  calculationTotalCartDetail(CartDetailEntity cartDetailEntity){
         BigDecimal bdQty = new BigDecimal(cartDetailEntity.getQty());
         BigDecimal bdPrice = new BigDecimal(cartDetailEntity.getPainting().getPrice());
         BigDecimal total = bdQty.multiply(bdPrice).setScale(2, RoundingMode.HALF_UP);
-        result.setTotal(total);
-        return result;
+        return total;
     }
 }

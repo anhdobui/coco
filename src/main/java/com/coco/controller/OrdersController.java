@@ -1,13 +1,15 @@
 package com.coco.controller;
 
+import com.coco.dto.OrderFilterDTO;
 import com.coco.dto.OrderReqDTO;
+import com.coco.dto.OrderStatusDTO;
 import com.coco.dto.OrdersDTO;
+import com.coco.enumDefine.StatusOrderEnum;
 import com.coco.service.IOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/orders")
@@ -19,5 +21,16 @@ public class OrdersController {
     @PostMapping
     public OrdersDTO postOrders(@RequestBody OrderReqDTO ordReq){
         return ordersService.orderPaintings(ordReq);
+    }
+
+    @GetMapping
+    public List<OrdersDTO> getByCondition(@ModelAttribute OrderFilterDTO orderFilterDTO){
+
+        return ordersService.getByCondition(orderFilterDTO);
+    }
+    @PutMapping("{id}")
+    public OrdersDTO updateStatus(@RequestBody OrderStatusDTO orderStatusDTO, @PathVariable(value = "id") Long id){
+        StatusOrderEnum statusEnum = StatusOrderEnum.fromString(orderStatusDTO.getStatus());
+        return ordersService.updateStatus(statusEnum.getValue(),id);
     }
 }

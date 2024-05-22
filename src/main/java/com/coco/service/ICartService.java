@@ -10,4 +10,5 @@ public interface ICartService {
     Long addPaintingToCart(CartPaintingDTO cartPaintingDTO);
 
     CartResDTO getCartByAccount(Long accountId);
+
 }
