@@ -13,4 +13,6 @@ public interface CartRepository extends JpaRepository<CartEntity,Long> {
     boolean hasCartDetails(@Param("cartId") Long cartId);
     Optional<CartEntity> findByIdAndStatusEquals(Long accId ,Integer status);
 
+    Optional<CartEntity> findByAcc_Id(Long accId);
+
 }
