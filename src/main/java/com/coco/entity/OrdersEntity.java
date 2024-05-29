@@ -14,12 +14,14 @@ import java.util.Date;
 public class OrdersEntity extends BaseEntity{
 
     private String code;
-    private Integer status;
+    private Integer status;//0,1,2,3
     private Date orderDate;
     private Date deliveryDate;
     private Date cancellationDate;
     private Date finishedDate;
-
+    private String deliveryAddress;
+    private Double shippingCost;
+    private Integer paymentStatus;//0 ,1
     @OneToOne
     @JoinColumn(name = "cart_id")
     private CartEntity cart;
@@ -28,6 +30,12 @@ public class OrdersEntity extends BaseEntity{
     public void prePersist() {
         this.orderDate = new Date();
         this.status = 1;
+        if(this.shippingCost == null){
+            this.shippingCost = 0d;
+        }
+        if(this.paymentStatus == null){
+            this.paymentStatus = 0;
+        }
     }
 
     @PostPersist
@@ -39,6 +47,9 @@ public class OrdersEntity extends BaseEntity{
         }
         if(this.cart != null){
             this.cart.setStatus(0);
+        }
+        if(this.deliveryAddress == null){
+            this.deliveryAddress = this.cart.getAcc().getPointAddress();
         }
     }
     @PreUpdate

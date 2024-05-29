@@ -19,6 +19,7 @@ public class PaintingEntity extends BaseEntity{
 
     private String code;
     private String name;
+    private String artist;
     private Double length;
     private Double width;
     private Double thickness;
@@ -62,7 +63,10 @@ public class PaintingEntity extends BaseEntity{
     public void prePersist() {
         if (this.inventory == null) {
             this.inventory = 0;
+        }if (this.price == null) {
+            this.price = 0d;
         }
     }
+
 
 }
