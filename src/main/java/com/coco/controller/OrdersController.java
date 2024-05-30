@@ -25,11 +25,6 @@ public class OrdersController {
         return ordersService.orderPaintings(ordReq);
     }
 
-    @PutMapping
-    public OrdersEntity updateOrder(@RequestParam Long id, @RequestBody OrdersDTO ordersDTO) throws DataNotFoundException {
-        return ordersService.updateOrder(id, ordersDTO);
-    }
-
     @GetMapping
     public List<OrdersDTO> getByCondition(@ModelAttribute OrderFilterDTO orderFilterDTO){
         return ordersService.getByCondition(orderFilterDTO);

@@ -11,12 +11,7 @@ import java.util.List;
 public interface IOrdersService {
 
     OrdersDTO orderPaintings(OrderReqDTO ordReq);
-<<<<<<< HEAD
-    OrdersEntity updateOrder(Long orderId, OrdersDTO ordersDTO) throws DataNotFoundException;
-=======
-
     List<OrdersDTO> getByCondition(OrderFilterDTO orderFilterDTO);
 
     OrdersDTO updateStatus(Integer status, Long id);
->>>>>>> main
 }

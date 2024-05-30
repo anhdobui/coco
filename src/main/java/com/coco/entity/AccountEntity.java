@@ -1,8 +1,9 @@
 package com.coco.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -10,6 +11,9 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "account")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountEntity extends BaseEntity{
 
     private String fullname;
@@ -25,6 +29,15 @@ public class AccountEntity extends BaseEntity{
 
     @OneToMany(mappedBy = "acc",cascade = {CascadeType.PERSIST, CascadeType.MERGE},orphanRemoval = true)
     private List<CartEntity> carts;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "fk_account_role"))
+    @JsonBackReference
+    private Role role;
+
+    @OneToMany(mappedBy = "account")
+    @JsonManagedReference
+    private List<ConfirmEmail> confirmEmailList;
 
     @PostPersist
     protected void onCreate() {
