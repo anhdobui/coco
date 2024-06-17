@@ -38,12 +38,6 @@ public class VnpayService {
         if (cart == null) {
             throw new RuntimeException("Cart not found");
         }
-        OrdersEntity orders = ordersRepository.findById(cart.getOrders().getId()).orElse(null);
-        if (orders == null){
-            OrdersEntity order = new OrdersEntity();
-            order.setCart(cart);
-            ordersRepository.save(orders);
-        }
         double totalMonney = orderReqDTO.getShippingCost();
         for (CartDetailEntity cartDetail : cart.getCartDetails()) {
             double totalPricePainting = cartDetail.getQty() * cartDetail.getPainting().getPrice();
