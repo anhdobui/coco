@@ -108,6 +108,15 @@ public class OrdersService implements IOrdersService {
         order = ordersRepository.save(order);
         return ordersMapper.toDTO(order);
     }
+
+    @Override
+    @Transactional
+    public void updateVnpayUrl(Long orderId,String url) {
+       OrdersEntity ordersEntity = ordersRepository.findById(orderId).orElseThrow(()-> new CustomRuntimeException("Order not found"));
+        ordersEntity.setVnpayUrl(url);
+        ordersRepository.save(ordersEntity);
+    }
+
     private Double calculationGrade(BigDecimal totalCart,Double oldGrade){
         BigDecimal newGrade = totalCart.divide(new BigDecimal("10")).add(new BigDecimal(oldGrade));
         Double result = newGrade.setScale(2, RoundingMode.HALF_UP).doubleValue();

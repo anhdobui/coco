@@ -20,6 +20,9 @@ public class OrdersEntity extends BaseEntity{
     private Date cancellationDate;
     private Date finishedDate;
     private String deliveryAddress;
+    private String phoneOrder;
+    @Column(name = "vnpay_url", columnDefinition = "MEDIUMTEXT")
+    private String vnpayUrl;
     private Double shippingCost;
     private Integer paymentStatus;//0 ,1
     @OneToOne
@@ -50,6 +53,9 @@ public class OrdersEntity extends BaseEntity{
         }
         if(this.deliveryAddress == null){
             this.deliveryAddress = this.cart.getAcc().getPointAddress();
+        }
+        if(this.phoneOrder == null){
+            this.phoneOrder = this.cart.getAcc().getPhone();
         }
     }
     @PreUpdate

@@ -1,6 +1,5 @@
 package com.coco.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,6 +18,7 @@ public class OrdersDTO {
     private CustomerDTO cust;
     private List<CartDetailResDTO> details;
     private String deliveryAddress;
+    private String phoneOrder;
     private Double shippingCost;
     private String paymentStatus;
     private BigDecimal total;

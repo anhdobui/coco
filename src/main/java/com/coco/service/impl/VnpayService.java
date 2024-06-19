@@ -1,20 +1,21 @@
 package com.coco.service.impl;
 
 import com.coco.config.VNPayConfig;
-import com.coco.dto.OrderReqDTO;
-import com.coco.entity.CartDetailEntity;
+import com.coco.dto.OrdersDTO;
 import com.coco.entity.CartEntity;
 import com.coco.entity.OrdersEntity;
+import com.coco.mapper.CartDetailMapper;
 import com.coco.repository.CartDetailRepository;
 import com.coco.repository.CartRepository;
 import com.coco.repository.OrdersRepository;
-import com.coco.utils.VNPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -31,34 +32,20 @@ public class VnpayService {
     @Autowired
     private CartRepository cartRepository;
     @Autowired
-    CartDetailRepository cartDetailRepository;
-
-    public String createPaymentUrl(OrderReqDTO orderReqDTO) throws URISyntaxException, UnsupportedEncodingException {
-        CartEntity cart = cartRepository.findById(orderReqDTO.getCartId()).orElse(null);
-        if (cart == null) {
-            throw new RuntimeException("Cart not found");
-        }
-        OrdersEntity orders = ordersRepository.findById(cart.getOrders().getId()).orElse(null);
-        if (orders == null){
-            OrdersEntity order = new OrdersEntity();
-            order.setCart(cart);
-            ordersRepository.save(orders);
-        }
-        double totalMonney = orderReqDTO.getShippingCost();
-        for (CartDetailEntity cartDetail : cart.getCartDetails()) {
-            double totalPricePainting = cartDetail.getQty() * cartDetail.getPainting().getPrice();
-            totalMonney += totalPricePainting;
-        }
-        long totalAmount = (long) (totalMonney * 100); // Ensure the amount is an integer
-
+    private CartDetailRepository cartDetailRepository;
+    @Autowired
+    private CartDetailMapper cartDetailMapper;
+    public String createPaymentUrl(OrdersDTO ordersDTO) throws URISyntaxException, UnsupportedEncodingException {
+        BigDecimal totalMonney =   ordersDTO.getTotal();
+        totalMonney = totalMonney.multiply(new BigDecimal(100*25455)).setScale(0, RoundingMode.UP);;
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", "2.1.0");
         vnp_Params.put("vnp_Command", "pay");
         vnp_Params.put("vnp_TmnCode", vnpayConfig.getVnp_TmnCode());
-        vnp_Params.put("vnp_Amount", String.valueOf(totalAmount));
+        vnp_Params.put("vnp_Amount", String.valueOf(totalMonney));
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", String.valueOf(orderReqDTO.getCartId()));
-        vnp_Params.put("vnp_OrderInfo", "Payment for order: " + orderReqDTO.getCartId());
+        vnp_Params.put("vnp_TxnRef", String.valueOf(ordersDTO.getId()));
+        vnp_Params.put("vnp_OrderInfo", "Payment for order: " + ordersDTO.getId());
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_ReturnUrl", vnpayConfig.getVnp_ReturnUrl());
